@@ -6,7 +6,7 @@ This tutorial is to get you started with [Amadeus For Developers' Node SDK](http
 We will start by [understanding the architecture](#Architecture), followed by building the app from scratch in just 3 simple steps:
 - [Initialing a node app](#initializing-the-node-app)
 - [Connecting the node app with Amadeus For Developers Node SDK](#connecting-with-amadeus-for-developers)
-- [Creating a basic UI to view results](#create-http-based-interfaces-for-client-side)
+- [Creating a basic UI to view results](#creating-basic-ui)
 
 # Pre-Requisites
 - `API credentials`: In order to use Amadeus For Developers Node SDK, you will need a pair of their API credentials from the [Amadeus For Developers portal](https://developers.amadeus.com). It is as simple as [registering for an account](https://developers.amadeus.com/register), and [creating an app](https://developers.amadeus.com/my-apps) on the portal.
