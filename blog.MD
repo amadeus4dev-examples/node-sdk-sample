@@ -1,14 +1,16 @@
 # Introduction
-This tutorial is to get you started with Amadeus For Developers' Node SDK in under 10 minutes. We will create a node app from scratch based on architecture discussed in the very first section. Please note that this is NOT supposed to be a full `sample project`, rather just a boilerplate that can be quickly developed from scratch in a few minutes to build your own use-cases on top of it.
+This tutorial is to get you started with [Amadeus For Developers' Node SDK](https://github.com/amadeus4dev/amadeus-node) in __under 10 minutes__. We will create a node app from scratch, based on the basic architecture discussed in the first section. 
 
-We will start by understanding the architecture, followed by building the app from scratch in just 3 simple steps:
-- Initialing a node app
-- Connecting the node app with Amadeus For Developers Node SDK
-- Creating a basic UI to view results
+*Please note that this is NOT supposed to be a 'complete project' in any sense, rather just a boilerplate that can be quickly developed from scratch in a few minutes.*
+
+We will start by [understanding the architecture](#Architecture), followed by building the app from scratch in just 3 simple steps:
+- [Initialing a node app](#Initializing the Node App)
+- [Connecting the node app with Amadeus For Developers Node SDK](#Connecting with Amadeus For Developers using Node SDK)
+- [Creating a basic UI to view results](#Creating Basic UI)
 
 # Pre-Requisites
-- `API credentials`: In order to use Amadeus For Developers Node SDK, you will need a pair of their API credentials. It is as simple as [registering on the portal](https://developers.amadeus.com/register), and [creating an app](https://developers.amadeus.com/my-apps) when logged in.
-- `Docker`: For simplicity, we shall be using a node-based docker container to avoid conflicting with any node version installed on your machine. If you don't have docker, you can follow the steps [based on your operating system](https://docs.docker.com/get-docker/). Once docker is installed, running the following command will provide you with just the runtime-environment you need.
+- `API credentials`: In order to use Amadeus For Developers Node SDK, you will need a pair of their API credentials from the [Amadeus For Developers portal](https://developers.amadeus.com). It is as simple as [registering for an account](https://developers.amadeus.com/register), and [creating an app](https://developers.amadeus.com/my-apps) on the portal.
+- `Docker`: For simplicity, we shall be using a node-based docker container to avoid conflicting with any node version installed on your machine. If you don't have docker, you can follow these steps [based on your operating system](https://docs.docker.com/get-docker/). Once docker is installed, running the following command will provide you with just the runtime-environment you need.
    ```bash
    docker run -it \
     -v $PWD/node-app:/app \
@@ -18,24 +20,31 @@ We will start by understanding the architecture, followed by building the app fr
     -p 8000:8000 \
     node:14.1.0-alpine3.10 /bin/sh
    ```
-   __NOTE__ that you need to pre-set the credentials as environment variables `AMADEUS_CLIENT_ID` (for key) and `AMADEUS_CLIENT_SECRET` (for secret) before running the above command. Also, the application is located in the `node-app` folder in your current directory and the application is running on port `8000`.
+   __NOTE__ that you need to pre-set your `API credentials` as environment variables before running the above command:
+   ```bash
+   export AMADEUS_CLIENT_ID=YOUR_API_KEY_HERE
+   export AMADEUS_CLIENT_SECRET=YOUR_API_SECRET_HERE
+   ```
+   Also, __NOTE__ that the application is located in the `node-app` folder inside current directory and the application is running on port `8000`.
 
 # Architecture
 ![architecture-image](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/architecture-image.jpg?raw=true)
 As depicted by the diagram above, it's going to be a pretty simple architecture. Our `app` would contain:
-- a `server-side` that is responsible for the connection with Amadeus APIs using the node SDK; and
-- a `client-side` that is responsible for displaying the content from Amadeus APIs.
+- `server-side` that is responsible for the connection with Amadeus APIs using the node SDK; and
+- `client-side` that is responsible for displaying the content from Amadeus APIs.
+
 The following sections shall discuss the implementation of this architecture to translate this architecture into code.
 
 # Initializing the Node App
 ![step-1-app-init](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/step-1-app-init.jpeg?raw=true)
-The goal of this section is to create a basic node app (equivalent to a `Hello World!` app). This simply requires running the following command in your console:
+The goal of this section is to create a basic node app (equivalent to a `Hello World!`). This simply requires running the following command in your console:
 ```bash
 npm init
 ```
-__NOTE__ that this requires the `npm` CLI tool installed in your local machine. For the sake of a boilerplate, feel free to press `enter` for each of the questions asked by the CLI tool.
+__NOTE__ that this requires the `npm` CLI tool installed in your local machine. 
+*For the sake of a simplicity, please feel free to press `enter` for each of the questions asked by the `npm` CLI tool.*
 
-# Connecting with Amadeus For Developers using Node SDK
+# Connecting with Amadeus For Developers
 ![step-2-sdk-connect](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/step-2-sdk-connect.jpeg?raw=true)
 This section is where we will install the [Amadeus For Developers Node SDK](https://github.com/amadeus4dev/amadeus-node). 
 Firstly, install the node SDK to your app by running the following `bash` command:
@@ -54,7 +63,8 @@ var amadeus = new Amadeus({
 });
 ```
 __NOTE__ that this code expects the API credentials to be pre-set in your environment variables.
-At this point, you can test your connection using the following code-snippet:
+
+At this point, you can test your connection adding the following code-snippet in `index.js` file:
 ```js
 amadeus.shopping.flightOffersSearch.get({
     originLocationCode: 'BOS',
@@ -67,17 +77,14 @@ amadeus.shopping.flightOffersSearch.get({
     console.log(JSON.stringify(responseError));
   });
 ```
-Hopefully, you should have the appropriate `JSON response` in your console on running the above file using the following command in your console:
+Hopefully, you should have the appropriate `JSON` response in your console on running the above file using the following command in your console where `docker` container is running:
 ```bash
-# Run this command in your docker container console, 
-# rather than in your local console.
 node index.js
 ```
 
-## Re-arranging app to create JSON-based APIs for `client-side`
-The `index.js` file is now connected with the Amadeus APIs via the Node SDK. However, it needs an interface to communicate with the `client-side` application. For this, modify the same file as following:
+## Create HTTP-based interface(s) for `client-side`
+The `index.js` file, which is (part of) the `server-side`, is now connected with the Amadeus APIs via the Node SDK. However, it needs an interface to communicate with the `client-side` application. For this, modify the same file (`index.js`) as follows:
 ```js
-// index.js
 var http = require('http');
 var fs = require('fs');
 
@@ -124,14 +131,19 @@ http.createServer(function (request, response) {
   }
 }).listen(8000);
 ```
-This enables the following interfaces to this app that are accessible over `HTTP`:
-- `/app`: To access the `client-side` files from `html/` folder. *This folder & its files will be created in next section.*
-- `/flights`: To access the `HTTP` interfaces for the `server-side` app. *For simplicity, this interface only wraps the `amadeus.shopping.flightOffersSearch.get` API (with hard-coded params) of the node SDK.*
-Any request which does not match this format shall return with a `404` error.
+This enables the following interfaces to the `server-side` that are accessible over `HTTP`:
+- `/app`: To access the `client-side` files from `html/` folder. 
+  *This folder & its files will be created in next section.*
+- `/flights`: To access the `HTTP` interfaces for the `server-side` app. 
+  *For simplicity, this interface only wraps the `amadeus.shopping.flightOffersSearch.get` API (with hard-coded params) of the node SDK.*
+
+Any request which does not match either of the two formats mentioned above, shall return with a `404` error.
 
 # Creating Basic UI
 ![step-3-basic-ui](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/step-3-basic-ui.jpeg?raw=true)
-Without going into much detail, the UI of this boikerplate is set to have a `button` that triggers an `AJAX request` to communicate with the node-server (developed in previous section) at its `/flights` interface to fetch results from Amadeus For Developers in real-time. Once the `AJAX request` completes, the resulting JSON is placed inside the `<div id="flights>"`. Here is how the HTML `<body>` looks like:
+Without going into much detail, the UI of this boilerplate is set to have a `button` that triggers an `AJAX request` to communicate with the node-server (developed in previous section) at its `/flights` interface to fetch results from Amadeus For Developers in real-time. Once the `AJAX request` completes, the resulting JSON is placed inside the `<div id="flights>"`. 
+
+Here is how the HTML `<body>` looks like:
 ```html
 <div class="container">
     <h2>Flight Options</h2>
@@ -153,23 +165,27 @@ $(document).ready(function () {
     });
   });
 ```
-__NOTE__ that we have abstracted the `generateHTML()` function to simplify the above snippet. If you want to check it out, please do so by opening the `html/index.html` file.
+__NOTE__ that we have abstracted the `generateHTML()` function to simplify the above snippet. If you want to check it out, please do so by opening the `html/index.html` file. Also, __NOTE__ that we're using `bootstrap` and `jQuery` to add a bit of styling in the UI.
 
 # Conclusion
-Finally, this app can be run using the following commands in the docker container's console:
+Finally, this app can be run using the following command in the docker container's console:
 ```bash
 node index.js
 ```
-To test, open the browser and browse to the following `URL`: `http://localhost:8000/app`. You might need to change the port number, if the very first command (to start docker container) was modified.
-Clicking the `Click here to fetch flight options!` button should fetch & display the flight results in JSON format.
+To test, open the browser and browse to the following `URL`: `http://localhost:8000/app`. 
+*You might need to change the port number, if the very first command (to start docker container) was modified.*
+
+Clicking the `Click here to fetch flight options!` button:
 ![basic-ui-button](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/basic-ui-button.png?raw=true)
-__NOTE__ that the button-click is not `instantaneous` and doesn't give a `loader` or `in-process` indication. So please give it a few seconds to react and present this UI:
+should fetch & display the flight results as follows:
 ![basic-ui-flights](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/basic-ui-flights.png?raw=true)
-To build upon this app, you can improve the following:
+__NOTE__ that the button-click is not `instantaneous` and doesn't give a `loader` or `in-process` indication. So please give it a few seconds to complete the operation.
+
+To build further upon this app, you will have to (at least) make the following changes:
 - improve the UI to make it more user-friendly & engaging, 
-- pass input-parameters from the `client-side` to the `server-side` to fetch desired results, and/or
-- update `server-side` to have more interfaces for different Amadeus For Developers APIs.
-Hope this tutorial was useful.
+- pass input-parameters from the `client-side` to the `server-side` for fetching desired results instead of the `hard-coded` one, and/or
+- update `server-side` to have more interfaces for different [Amadeus For Developers APIs](https://developers.amadeus.com/self-service/apis-docs).
+Hope this tutorial was useful!
 
 # Useful Links
 - [Amadeus For Developers](https://developers.amadeus.com/)
