@@ -21,14 +21,14 @@ We will start by understanding the architecture, followed by building the app fr
    __NOTE__ that you need to pre-set the credentials as environment variables `AMADEUS_CLIENT_ID` (for key) and `AMADEUS_CLIENT_SECRET` (for secret) before running the above command. Also, the application is located in the `node-app` folder in your current directory and the application is running on port `8000`.
 
 # Architecture
-![architecture-image](https://github.com/amadeus4dev/node-sdk-example/blob/master/blog-images/architecture-image.jpg?raw=true)
+![architecture-image](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/architecture-image.jpg?raw=true)
 As depicted by the diagram above, it's going to be a pretty simple architecture. Our `app` would contain:
 - a `server-side` that is responsible for the connection with Amadeus APIs using the node SDK; and
 - a `client-side` that is responsible for displaying the content from Amadeus APIs.
 The following sections shall discuss the implementation of this architecture to translate this architecture into code.
 
 # Initializing the Node App
-![step-1-app-init](https://github.com/amadeus4dev/node-sdk-example/blob/master/blog-images/step-1-app-init.jpeg?raw=true)
+![step-1-app-init](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/step-1-app-init.jpeg?raw=true)
 The goal of this section is to create a basic node app (equivalent to a `Hello World!` app). This simply requires running the following command in your console:
 ```bash
 npm init
@@ -36,7 +36,7 @@ npm init
 __NOTE__ that this requires the `npm` CLI tool installed in your local machine. For the sake of a boilerplate, feel free to press `enter` for each of the questions asked by the CLI tool.
 
 # Connecting with Amadeus For Developers using Node SDK
-![step-2-sdk-connect](https://github.com/amadeus4dev/node-sdk-example/blob/master/blog-images/step-2-sdk-connect.jpeg?raw=true)
+![step-2-sdk-connect](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/step-2-sdk-connect.jpeg?raw=true)
 This section is where we will install the [Amadeus For Developers Node SDK](https://github.com/amadeus4dev/amadeus-node). 
 Firstly, install the node SDK to your app by running the following `bash` command:
 ```bash
@@ -130,7 +130,7 @@ This enables the following interfaces to this app that are accessible over `HTTP
 Any request which does not match this format shall return with a `404` error.
 
 # Creating Basic UI
-![step-3-basic-ui](https://github.com/amadeus4dev/node-sdk-example/blob/master/blog-images/step-3-basic-ui.jpeg?raw=true)
+![step-3-basic-ui](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/step-3-basic-ui.jpeg?raw=true)
 Without going into much detail, the UI of this boikerplate is set to have a `button` that triggers an `AJAX request` to communicate with the node-server (developed in previous section) at its `/flights` interface to fetch results from Amadeus For Developers in real-time. Once the `AJAX request` completes, the resulting JSON is placed inside the `<div id="flights>"`. Here is how the HTML `<body>` looks like:
 ```html
 <div class="container">
@@ -162,9 +162,9 @@ node index.js
 ```
 To test, open the browser and browse to the following `URL`: `http://localhost:8000/app`. You might need to change the port number, if the very first command (to start docker container) was modified.
 Clicking the `Click here to fetch flight options!` button should fetch & display the flight results in JSON format.
-![basic-ui-button](https://github.com/amadeus4dev/node-sdk-example/blob/master/blog-images/basic-ui-button.png?raw=true)
+![basic-ui-button](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/basic-ui-button.png?raw=true)
 __NOTE__ that the button-click is not `instantaneous` and doesn't give a `loader` or `in-process` indication. So please give it a few seconds to react and present this UI:
-![basic-ui-flights](https://github.com/amadeus4dev/node-sdk-example/blob/master/blog-images/basic-ui-flights.png?raw=true)
+![basic-ui-flights](https://github.com/amadeus4dev/node-sdk-sample/blob/master/blog-images/basic-ui-flights.png?raw=true)
 To build upon this app, you can improve the following:
 - improve the UI to make it more user-friendly & engaging, 
 - pass input-parameters from the `client-side` to the `server-side` to fetch desired results, and/or
