@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Flights example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Flight Options</h2>
+    <div id="flights" class="list-group">
+      <button>Click here to fetch flight options!</button>
+    </div>
+  </div>
+
+</body>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("button").click(function () {
+      $.ajax({
+        url: "/flights",
+        success: function (response) {
+          $("#flights").html(generateHTML(response.result.data));
+        }
+      });
+    });
+  });
+
+  generateHTML = function (flightOffers) {
+    var html = '';
+    for (var i = 0; i < flightOffers.length; i++) {
+      var flightOffer = flightOffers[i];
+      var itineraries = flightOffers[i].itineraries;
+      html += `<a href="#" class="list-group-item">`
+      html += `<h4 class="list-group-item-heading">`
+      for (var j = 0; j < itineraries.length; j++) {
+        var itinerary = itineraries[j];
+        var segments = itineraries[j].segments;
+        for (var k = 0; k < segments.length; k++) {
+          var segment = segments[k];
+          html += itinerary.segments[k].departure.iataCode;
+          html += "-";
+          html += itinerary.segments[k].arrival.iataCode;
+          if (segments[k + 1]) {
+            html += ", ";
+          }
+        }
+        if (itineraries[j + 1]) {
+          html += " | ";
+        }
+      }
+      html += `</h4>`;
+      html +=
+        `<p class="list-group-item-text">${flightOffers[i].price.grandTotal} ${flightOffers[i].price.currency}</p>`
+      html += `</a>`;
+    }
+    return html;
+  }
+</script>
+
+</html>
